@@ -1,0 +1,2 @@
+# Only needed for LLM mode. The bot runs offline-only without it.
+anthropic>=1.0
