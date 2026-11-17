@@ -44,6 +44,11 @@ REWRITES: list[tuple[str, str, str]] = [
   ~/mental-models/<name>.md   your own models, kept on this cloud computer across tasks""",
     ),
     (
+        "description: add Thai triggers (the host matches on this to auto-load)",
+        """description: Apply mental models — your own, or 21 sourced ones — to any problem. Use when user requests decision analysis, says "help me think", "apply mental model", mentions model names (inversion, bottlenecks, second-order thinking), or needs structured thinking frameworks.""",
+        """description: Apply mental models — your own, or 21 sourced ones — to any problem. Use when user requests decision analysis, says "help me think", "apply mental model", mentions model names (inversion, bottlenecks, second-order thinking), or needs structured thinking frameworks. Also triggers in Thai: ปรึกษา, ช่วยคิด, ช่วยวิเคราะห์, ตัดสินใจ, ควร...ดีไหม, คิดไม่ออก, กรอบคิด, โมเดลความคิด.""",
+    ),
+    (
         "user-model directory table",
         """| Path | Holds |
 |---|---|

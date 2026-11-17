@@ -53,6 +53,7 @@ text, then validates the result. Nothing in Steps 1–5 changes.
 
 | Adaptation | Why |
 |---|---|
+| description: Thai triggers | the frontmatter `description` is what Manus matches on to load a skill unprompted; the canonical one lists English triggers only |
 | user-model directory table | `~/.claude/mental-models/` is a Claude Code path. In Manus the equivalents are `./.mental-models/`, `~/mental-models/` on the cloud computer, and files attached to the task. |
 | "both globs" → "all three" | the table gained a third location; the prose had to follow |
 | "if both are empty" → "if all three are empty" | same |
