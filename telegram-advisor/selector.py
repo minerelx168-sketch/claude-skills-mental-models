@@ -79,6 +79,7 @@ HEURISTICS: list[dict] = [
             "ช้ามาก", "ล่าช้า", "คอขวด", "ประสิทธิภาพ", "เร่งงาน", "ปรับปรุง",
             "ผลผลิต", "ทำได้มากขึ้น", "คุ้มที่สุด", "จุดคุ้ม", "ไม่ทัน", "งานล้น",
             "กำลังการผลิต", "ขยาย", "โต", "สเกล",
+            "มีแค่", "คนเดียว", "ไม่เพียงพอ", "รับไม่ไหว", "คนไม่พอ",
             "slow", "bottleneck", "throughput", "performance", "efficiency",
             "scale", "speed up", "productivity", "capacity", "constraint", "optimize",
         ],
@@ -152,6 +153,7 @@ _EXTRA_TRIGGERS: dict[str, list[str]] = {
     ],
     "bottlenecks": [
         "ติดขัด", "รอ", "คิวยาว", "ค้าง", "งานกอง",
+        "มีแค่", "คนเดียว", "คนไม่พอ",
         "queue", "waiting", "backlog", "blocker",
     ],
 }

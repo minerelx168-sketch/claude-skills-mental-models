@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import html
 import json
+import os
 import re
 import time
 import urllib.error
@@ -30,12 +31,14 @@ class Telegram:
     def __init__(self, token: str, timeout: int = 60):
         self._token = token
         self._timeout = timeout
+        # Overridable for a self-hosted Bot API server, and for end-to-end tests.
+        self._root = (os.environ.get("TELEGRAM_API_ROOT") or API_ROOT).rstrip("/")
         self.offset: int | None = None
 
     # -- transport --------------------------------------------------------
 
     def call(self, method: str, **params) -> dict:
-        url = f"{API_ROOT}/bot{self._token}/{method}"
+        url = f"{self._root}/bot{self._token}/{method}"
         data = json.dumps(params).encode("utf-8")
         request = urllib.request.Request(
             url,
@@ -90,15 +93,39 @@ class Telegram:
         if updates:
             self.offset = updates[-1]["update_id"] + 1
 
+    # -- webhook ----------------------------------------------------------
+
+    def set_webhook(self, url: str, secret: str) -> None:
+        self.call(
+            "setWebhook",
+            url=url,
+            secret_token=secret,
+            allowed_updates=["message"],
+            drop_pending_updates=True,
+        )
+
+    def delete_webhook(self) -> None:
+        self.call("deleteWebhook", drop_pending_updates=False)
+
+    def webhook_info(self) -> dict:
+        return self.call("getWebhookInfo") or {}
+
     def send_typing(self, chat_id: int) -> None:
         try:
             self.call("sendChatAction", chat_id=chat_id, action="typing")
         except TelegramError:
             pass  # cosmetic only
 
-    def send(self, chat_id: int, text: str, reply_to: int | None = None) -> None:
-        """Send text as HTML, split into Telegram-sized chunks."""
-        chunks = split_message(to_telegram_html(text))
+    def send(
+        self, chat_id: int, text: str, reply_to: int | None = None, raw: bool = False
+    ) -> None:
+        """Send text as HTML, split into Telegram-sized chunks.
+
+        `raw=True` means the caller already produced valid Telegram HTML and
+        escaped any user text in it; the markdown conversion is skipped so it
+        cannot rewrite the inside of a <pre> block.
+        """
+        chunks = split_message(text.strip() if raw else to_telegram_html(text))
         for index, chunk in enumerate(chunks):
             params = {
                 "chat_id": chat_id,

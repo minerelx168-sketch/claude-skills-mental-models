@@ -55,3 +55,40 @@ class Conversations:
         with self._lock:
             self._data.pop(str(chat_id), None)
             self._save()
+
+
+class Store:
+    """A tiny persisted key-value store (one JSON value per chat)."""
+
+    def __init__(self, path: Path) -> None:
+        self.path = Path(path)
+        self._lock = threading.Lock()
+        self._data: dict[str, dict] = {}
+        if self.path.is_file():
+            try:
+                self._data = json.loads(self.path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                log.warning("could not read %s (%s); starting fresh", self.path, exc)
+
+    def _save(self) -> None:
+        try:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            temp = self.path.with_suffix(".tmp")
+            temp.write_text(json.dumps(self._data, ensure_ascii=False), encoding="utf-8")
+            temp.replace(self.path)
+        except OSError as exc:
+            log.warning("could not persist %s: %s", self.path, exc)
+
+    def get(self, key: int) -> dict | None:
+        with self._lock:
+            return self._data.get(str(key))
+
+    def put(self, key: int, value: dict) -> None:
+        with self._lock:
+            self._data[str(key)] = value
+            self._save()
+
+    def drop(self, key: int) -> None:
+        with self._lock:
+            if self._data.pop(str(key), None) is not None:
+                self._save()
