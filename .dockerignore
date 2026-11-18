@@ -1,0 +1,7 @@
+# Secrets and local state must never be baked into an image.
+**/.env
+**/.state
+**/__pycache__
+.git
+manus/build
+manus/dist

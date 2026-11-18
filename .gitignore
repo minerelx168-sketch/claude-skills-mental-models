@@ -23,3 +23,13 @@ Thumbs.db
 
 # stray agent test output
 out*.txt
+
+# telegram-advisor local config and runtime state
+.env
+.state/
+__pycache__/
+*.pyc
+
+# manus build output
+manus/build/
+manus/dist/
